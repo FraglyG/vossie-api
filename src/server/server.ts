@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from "cors"
 import { importAllFilesInFolder } from '../infrastructure/modularize'
+import path from "path"
 
 // SETUPS
 const webservices = new Map<string, Webservice>()
@@ -70,7 +71,7 @@ app.get('/', (req, res) => {
 
 async function importWebservices() {
     // import all webservices
-    const absolutePath = __dirname + "\\webservices"
+    const absolutePath = path.join(__dirname, "webservices")
     await importAllFilesInFolder(absolutePath)
 
     // go through all webservies and set up listeners
