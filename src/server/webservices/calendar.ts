@@ -15,6 +15,8 @@ import { Webservice, WebserviceCallback } from "../server";
 //         console.error('Error fetching calendar:', error);
 //     });
 
+const calendarCache = new Map<string, Day[]>()
+
 interface Day {
     seconds: number;
     minutes: number;
@@ -127,6 +129,12 @@ const webserviceFunction: WebserviceCallback = async (req, res) => {
         return
     }
 
+    // check if the token is cached
+    if (calendarCache.has(token)) {
+        res.status(200).send(calendarCache.get(token))
+        return
+    }
+
     // get calendar
     const params = new URLSearchParams({
         wstoken: token,
@@ -153,6 +161,9 @@ const webserviceFunction: WebserviceCallback = async (req, res) => {
             dayArray.push(day)
         }
     }
+
+    calendarCache.set(token, dayArray) // cache the token
+    setTimeout(() => { calendarCache.delete(token) }, 10 * time.minute) // expires in 10 minutes
 
     res.status(200).send(dayArray)
 }
