@@ -4,8 +4,7 @@
   "description": "an API for accessing information on mylms.vossie.net",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "tsc"
+    "start": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
