@@ -122,13 +122,18 @@ const webserviceFunction: WebserviceCallback = async (req, res) => {
     // get the 'token' query
     const token = req.query.token
 
+    if (!token) {
+        res.status(404).send("No Token")
+        return
+    }
+
     // get calendar
     const params = new URLSearchParams({
         wstoken: token,
         wsfunction: 'core_calendar_get_calendar_monthly_view',
         moodlewsrestformat: 'json',
-        year: 2023,
-        month: 8,
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
         courseid: 0, // Replace with the desired course ID (0 for all courses)
     } as any);
 
@@ -136,6 +141,11 @@ const webserviceFunction: WebserviceCallback = async (req, res) => {
 
     const response = await axios.get(webserviceURL, { params })
     const weeks = response.data.weeks as Week[]
+
+    if (!weeks) {
+        res.status(404).send("Invalid Token")
+        return
+    }
 
     // collect all the days of the weeks
     for (const week of weeks) {

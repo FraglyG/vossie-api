@@ -122,14 +122,19 @@ const webserviceFunction: WebserviceCallback = async (req, res) => {
     // get the 'token' query
     const token = req.query.token
 
+    if (!token) {
+        res.status(404).send("No Token")
+        return
+    }
+
     // get calendar
     const params = new URLSearchParams({
         wstoken: token,
         wsfunction: 'core_calendar_get_calendar_day_view',
         moodlewsrestformat: 'json',
-        year: 2023,
-        month: 8,
-        day: 21,
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        day: new Date().getDate(),
         courseid: 0, // Replace with the desired course ID (0 for all courses)
     } as any);
 
